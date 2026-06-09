@@ -199,7 +199,7 @@ function showBanner(
           <path d="M20 4 8.12 8.12"/><path d="M14.8 14.8 20 20"/>
           <path d="m8.12 15.88 5.91-5.91"/>
         </svg>
-        Taglio: ${entities.length} dato${entities.length > 1 ? ' sensibili' : ' sensibile'} rilevato
+        Taglio detected ${entities.length} sensitive item${entities.length > 1 ? 's' : ''}
       </div>
       <ul>${listItems}</ul>
       <div class="btns">

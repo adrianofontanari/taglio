@@ -4,7 +4,7 @@
 
 Browser extension (Chrome MV3) that detects sensitive data in your ChatGPT prompts locally and blocks or sanitizes before send. No proxies. No servers. Nothing leaves your device.
 
-<!-- GIF demo here -->
+![Taglio demo](assets/demo.gif)
 
 ## Phase 0 — what works right now
 
