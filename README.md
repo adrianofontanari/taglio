@@ -1,23 +1,55 @@
-# Taglio
+# Taglio ✂️
 
 > Cuts PII out of your prompts before they reach the LLM.
 
-Browser extension that intercepts prompts sent to ChatGPT, Claude, and Gemini, detects sensitive data locally, and blocks or sanitizes before send. No proxies, no TLS interception, no data leaves your device.
+Browser extension (Chrome MV3) that detects sensitive data in your ChatGPT prompts locally and blocks or sanitizes before send. No proxies. No servers. Nothing leaves your device.
 
-## Status
+<!-- GIF demo here -->
 
-Phase 0 — Spike in development. Public roadmap coming.
+## Phase 0 — what works right now
 
-## What it does (planned)
+- **Real-time detection** as you type: email, IBAN, Codice Fiscale, Italian mobile numbers, credit cards (Luhn-validated)
+- **Inline underlines** on matched PII via CSS Custom Highlight API — no DOM modification
+- **Submit gate**: intercepts Enter / click and shows a banner with detected items
+- **Sanitize and send**: replaces PII with `[EMAIL]`, `[IBAN]`, `[CF]`, etc., then submits
+- **Send anyway**: lets you override with one click
+- Active on `chatgpt.com` and `chat.openai.com`
 
-- **Local-only PII detection.** Regex for deterministic patterns (Codice Fiscale, IBAN, email, phone, credit cards) plus on-device NER for contextual entities (names, organizations, addresses).
-- **Inline highlights as you type.** Grammarly-style underline with hover tooltips: see what was flagged, why, and one-click sanitize.
-- **Submit gate.** Blocks send when high-risk PII is detected. Sanitize to placeholders, allow once, or override with audit trail.
-- **Multi-LLM.** Works across major web interfaces: ChatGPT, Claude, Gemini, Perplexity.
+## Install (dev)
 
-## Why local-only
+```bash
+git clone https://github.com/adrianofontanari/taglio
+cd taglio
+npm install
+npm run dev       # opens Chrome with extension loaded via hot-reload
+```
 
-Existing DLP solutions for LLM prompts require TLS interception, MDM-enforced proxies, or switching to controlled tools. Few organizations adopt them. Taglio runs entirely in the browser via WebGPU — the text never leaves your device. The extension itself is not a PII processor.
+Or build once:
+
+```bash
+npm run build
+# Load .output/chrome-mv3 as unpacked extension in chrome://extensions
+```
+
+## Architecture
+
+```
+Detection Engine (TypeScript, no DOM)
+├── Tier 0: Regex   ← Phase 0, this release
+├── Tier 1: NER     ← Phase 1, transformers.js
+└── Tier 2: LLM     ← Phase 2, web-llm sanitization
+```
+
+The engine is pure TypeScript with zero DOM dependencies (`lib/engine.ts`). The content script is the only surface — same engine will power a desktop app and SDK in later phases.
+
+## Roadmap
+
+| Phase | Status | Output |
+|---|---|---|
+| **0 — Spike** | ✅ Done | Regex detection on ChatGPT, submit gate, inline highlights |
+| **1 — MVP** | Planned | NER via transformers.js, adapter for Claude + Gemini, Chrome Web Store |
+| **2 — Production** | Planned | Constrained-decoding sanitization, policy JSON, Firefox |
+| **3 — Desktop** | Optional | Tauri clipboard guard, Python SDK |
 
 ## License
 
