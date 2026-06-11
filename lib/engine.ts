@@ -56,25 +56,32 @@ const PATTERNS: Array<{
 ];
 
 export function detect(text: string): Entity[] {
-  const result: Entity[] = [];
-  const covered = new Set<string>();
+  const candidates: Entity[] = [];
 
   for (const { type, re, validate } of PATTERNS) {
     re.lastIndex = 0;
     let m: RegExpExecArray | null;
     while ((m = re.exec(text)) !== null) {
       if (validate && !validate(m[0])) continue;
-      const start = m.index;
-      const end = start + m[0].length;
-      const key = `${start}:${end}`;
-      if (!covered.has(key)) {
-        covered.add(key);
-        result.push({ start, end, type, raw: m[0] });
-      }
+      candidates.push({ start: m.index, end: m.index + m[0].length, type, raw: m[0] });
     }
   }
 
-  return result.sort((a, b) => a.start - b.start);
+  // sanitize() assumes disjoint, ordered spans — overlapping entities
+  // (e.g. a CF used as the local part of an email) move its cursor
+  // backwards and duplicate text. Sort by start (longest first on equal
+  // start) and drop anything overlapping the last kept entity, so the
+  // widest match wins.
+  candidates.sort((a, b) => a.start - b.start || b.end - a.end);
+  const result: Entity[] = [];
+  let lastEnd = -1;
+  for (const e of candidates) {
+    if (e.start >= lastEnd) {
+      result.push(e);
+      lastEnd = e.end;
+    }
+  }
+  return result;
 }
 
 export function sanitize(text: string, entities: Entity[]): string {
