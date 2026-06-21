@@ -18,7 +18,7 @@ Detects personal data in your ChatGPT prompts and sanitizes it before sending. 1
 
 **Category**
 ```
-Productivity
+Privacy & Security
 ```
 
 **Language**
