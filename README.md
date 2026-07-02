@@ -2,6 +2,8 @@
 
 > Cuts PII out of your prompts before they reach the LLM.
 
+[![Chrome Web Store](https://img.shields.io/badge/Chrome%20Web%20Store-Install-4285F4?logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/taglio/kcfjalbmcmeonhkggpmaijocipffnkpn)
+
 **🔒 Zero data collection · Zero network calls · Zero special permissions · Zero runtime dependencies**
 
 Browser extension (Chrome MV3) that detects sensitive data in your ChatGPT prompts locally and blocks or sanitizes before send. No proxies. No servers. Nothing leaves your device — [verify it yourself in 2 minutes](#privacy--taglio-collects-nothing).
@@ -43,7 +45,11 @@ Don't take our word for it — every claim above is checkable against the source
 
 If a future version ever needs a permission or a network call (e.g. downloading the NER model in Phase 1), it will be documented here first, with the reason.
 
-## Install (dev)
+## Install
+
+**[Get it on the Chrome Web Store](https://chromewebstore.google.com/detail/taglio/kcfjalbmcmeonhkggpmaijocipffnkpn)** — one click, no build needed.
+
+### Dev build
 
 ```bash
 git clone https://github.com/adrianofontanari/taglio
@@ -75,7 +81,7 @@ The engine is pure TypeScript with zero DOM dependencies (`lib/engine.ts`). The 
 | Phase | Status | Output |
 |---|---|---|
 | **0 — Spike** | ✅ Done | Regex detection on ChatGPT, submit gate, inline highlights |
-| **1 — MVP** | Planned | NER via transformers.js, adapter for Claude + Gemini, Chrome Web Store |
+| **1 — MVP** | 🟡 In progress | ✅ Chrome Web Store live · Planned: NER via transformers.js, adapter for Claude + Gemini |
 | **2 — Production** | Planned | Constrained-decoding sanitization, policy JSON, Firefox |
 | **3 — Desktop** | Optional | Tauri clipboard guard, Python SDK |
 
